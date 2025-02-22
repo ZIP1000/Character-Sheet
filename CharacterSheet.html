@@ -661,15 +661,14 @@
                 let hitDiceElement = document.getElementById("available-hit-dice");
                 if (hitDiceElement) {
                     let hitDiceValue = gameData.availableHitDice ?? gameData.level; // Use nullish coalescing instead of `||`
-                    hitDiceElement.value = hitDiceValue;
+                    hitDiceElement.innerText = hitDiceValue;
                 } else {
                     console.error("Error: Element #available-hit-dice not found!");
                 }
 
                 // Load mana
                 let currentMana = gameData.currentMana || 0;
-
-                document.getElementById("current-mana").textContent = currentMana || 0;
+                document.getElementById("current-mana").innerText = currentMana || 0;
                 updateManaButtons(currentMana);
 
                 // Call these functions to update UI after loading
