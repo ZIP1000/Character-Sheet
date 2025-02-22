@@ -1,928 +1,249 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <style>
-        body {
-            font-family: 'Georgia', serif;
-            background-color: #f5f5dc;
-            padding: 20px;
-        }
-
-        .tab {
-            display: inline-block;
-            padding: 10px 20px;
-            background: #444;
-            color: white;
-            border-radius: 5px 5px 0 0;
-            cursor: pointer;
-            margin-right: 5px;
-        }
-
-        .tab:hover,
-        .active {
-            background: #222;
-        }
-
-        .tab-container {
-            display: flex;
-        }
-
-        .tab-content {
-            display: none;
-            padding: 20px;
-            background: white;
-            border: 2px solid black;
-            border-radius: 0 0 10px 10px;
-        }
-
-        .active-tab {
-            display: block;
-        }
-
-        .character-sheet {
-            display: flex;
-            gap: 20px;
-        }
-
-        .section {
-            background: #fff;
-            padding: 15px;
-            border: 2px solid black;
-            border-radius: 10px;
-            width: 250px;
-        }
-
-        .stat-block input,
-        .skill-block input {
-            width: 50px;
-            text-align: center;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .mod {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .char-info input {
-            width: 100%;
-            font-size: 18px;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        h3 {
-            text-align: center;
-            border-bottom: 2px solid black;
-            padding-bottom: 5px;
-        }
-    </style>
-    <style>
-        .spell-info {
-            background-color: #f4f4f4;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        /* Dark Mode Styles */
-        body.dark-mode {
-            background-color: #333;
-            color: #f5f5dc;
-        }
-
-        .dark-mode .tab {
-            background: #666;
-            color: #f5f5dc;
-        }
-
-        .dark-mode .tab:hover,
-        .dark-mode .active {
-            background: #444;
-        }
-
-        .dark-mode .tab-content {
-            background: #444;
-            color: #f5f5dc;
-        }
-
-        .dark-mode .section {
-            background: #555;
-            border-color: #777;
-        }
-
-        .dark-mode input,
-        .dark-mode select,
-        .dark-mode button {
-            background: #666;
-            color: #f5f5dc;
-            border: 1px solid #777;
-        }
-
-        .dark-mode .spell-info {
-            background-color: #555;
-        }
-
-        button {
-            background-color: #444;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #222;
-        }
-
-        button:active {
-            background-color: #000;
-        }
-
-        .dark-mode button {
-            background-color: #666;
-            color: #f5f5dc;
-        }
-
-        .dark-mode button:hover {
-            background-color: #444;
-        }
-
-        .dark-mode button:active {
-            background-color: #222;
-        }
-    </style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D&D Character Sheet</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/main.js" type="module" defer></script>
 </head>
 
 <body>
-    <div class="tab-container">
-        <div class="tab" data-target="player" onclick="openTab('player')">Player</div>
-        <div class="tab" data-target="inventory" onclick="openTab('inventory')">Inventory</div>
-        <div class="tab" data-target="spells" onclick="openTab('spells')">Spells</div>
-        <button onclick="saveGame()">Save Game</button>
-        <button onclick="loadGame()">Load Game</button>
-        <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
-    </div>
+    <nav class="tab-container">
+        <button class="tab" data-target="player" onclick="openTab('player')">Player</button>
+        <button class="tab" data-target="inventory" onclick="openTab('inventory')">Inventory</button>
+        <button class="tab" data-target="spells" onclick="openTab('spells')">Spells</button>
+        <button onclick="saveGame()" aria-label="Save Game">Save Game</button>
+        <button onclick="loadGame()" aria-label="Load Game">Load Game</button>
+        <button onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">Toggle Dark Mode</button>
+    </nav>
 
-    <h2>Dungeons & Dragons Character Sheet</h2>
+    <header>
+        <h1>Dungeons & Dragons Character Sheet</h1>
+    </header>
 
-    <div id="inventory" class="tab-content">
-        <h3>Inventory</h3>
-        <div>
-            <label>Item Name:</label>
-            <input type="text" id="item-name">
+    <main>
+        <!-- Inventory Tab -->
+        <section id="inventory" class="tab-content">
+            <h2>Inventory</h2>
+            <form class="inventory-form" onsubmit="event.preventDefault(); addItem();">
+                <div class="form-group">
+                    <label for="item-name">Item Name:</label>
+                    <input type="text" id="item-name" required>
 
-            <label>Quantity:</label>
-            <input type="number" id="item-quantity" value="1" min="1">
+                    <label for="item-quantity">Quantity:</label>
+                    <input type="number" id="item-quantity" value="1" min="1">
 
-            <label>Description:</label>
-            <input type="text" id="item-description">
+                    <label for="item-description">Description:</label>
+                    <input type="text" id="item-description">
 
-            <button onclick="addItem()">Add Item</button>
-        </div>
+                    <button type="submit">Add Item</button>
+                </div>
+            </form>
 
-        <h3>Inventory List</h3>
-        <ul id="inventory-list"></ul>
-    </div>
+            <h3>Inventory List</h3>
+            <ul id="inventory-list" role="list"></ul>
+        </section>
 
-    <div id="player" class="tab-content active-tab">
-        <div class="character-sheet">
-            <!-- Left Section: Saving Throws, Skills -->
-            <div class="section">
-                <h3>Miscellaneous</h3>
-                <label>Inspiration:</label> <input type="checkbox" id="inspiration"><br>
-
-                <label>Proficiency Bonus:</label>
-                <input type="number" id="prof-bonus" value="2" oninput="updateModifiers()">
-
-                <h3>Saving Throws</h3>
-                <div id="saving-throws"></div>
-
-                <h3>Skills</h3>
-                <div id="skills"></div>
-
-                <h3>Other Stats</h3>
-                <p>Passive Perception: <span class="mod" id="passive-perception">10</span></p>
-                <p>Initiative: <span class="mod" id="initiative">+0</span></p>
-            </div>
-
-            <!-- Middle Section: Ability Scores -->
-            <div class="section">
-                <h3>Abilities</h3>
-                <label>Level:</label>
-                <input type="number" id="level" value="1" min="1" max="20" oninput="updateModifiers()">
-
-                <div id="abilities"></div>
-
-            </div>
-
-            <!-- Right Section: Health -->
-            <div class="section">
-                <h3>Health</h3>
-                <label>Max HP:</label>
-                <input type="number" id="max-hp" value="100" min="1" oninput="validateHP()"><br>
-
-                <label>Current HP:</label>
-                <input type="number" id="current-hp" value="100" min="0" oninput="validateHP()"><br>
-
-                <label>Temporary HP:</label>
-                <input type="number" id="temp-hp" value="0" min="0" oninput="validateHP()"><br>
-
-                <button onclick="resetHealth()">Reset Health</button>
-                <button onclick="takeDamage()">Take Damage</button>
-                <input type="number" id="damage-input" value="0" min="0">
-                <h3>Hit Dice</h3>
-                <p>Hit Dice: <span id="hit-dice">1d8</span></p>
-                <p>Available Hit Dice: <input type="number" id="available-hit-dice"></p>
-                <button onclick="useHitDie()">Use Hit Die</button>
-                <button onclick="resetHitDice()">Reset Hit Dice</button>
-
-                <h3>Death Saves</h3>
-                <label>Successes:</label>
-                <input type="checkbox" id="death-save-success-1">
-                <input type="checkbox" id="death-save-success-2">
-                <input type="checkbox" id="death-save-success-3"><br>
-
-                <label>Failures:</label>
-                <input type="checkbox" id="death-save-fail-1">
-                <input type="checkbox" id="death-save-fail-2">
-                <input type="checkbox" id="death-save-fail-3"><br>
-
-                <h3>Currency</h3>
-
-                <!-- Display Current Currency Values (Not Editable) -->
-                <p>CP: <span id="cp-display">0</span></p>
-                <p>SP: <span id="sp-display">0</span></p>
-                <p>EP: <span id="ep-display">0</span></p>
-                <p>GP: <span id="gp-display">0</span></p>
-
-                <!-- Input for Adding/Subtracting Currency -->
-                <label>Modify Currency:</label>
-                <select id="currency-type">
-                    <option value="cp">Copper (CP)</option>
-                    <option value="sp">Silver (SP)</option>
-                    <option value="ep">Electrum (EP)</option>
-                    <option value="gp">Gold (GP)</option>
-                </select>
-
-                <select id="add-subtract">
-                    <option value="add">Add</option>
-                    <option value="subtract">Subtract</option>
-                </select>
-
-                <input type="number" id="currency-amount" value="1" min="1">
-
-                <button onclick="modifyCurrency()">Apply</button>
-
-                <!-- Convert Button -->
-                <button onclick="convertCurrency()">Convert Currency</button>
-
-                <!-- Show Total GP Value -->
-                <p>Total GP Value: <span id="total-gp">0</span></p>
-
-                <!-- Show Conversion Rates -->
-                <h4>Exchange Rates</h4>
-                <p>100 CP = 1 GP</p>
-                <p>10 SP = 1 GP</p>
-                <p>2 EP = 1 GP</p>
-                <p>10 GP = 1 PP</p>
-
-            </div>
-        </div>
-    </div>
-
-    <div id="spells" class="tab-content">
-        <div class="spell-info">
-            <p><strong>Spellcasting Class:</strong> Druid</p>
-            <p><strong>Spellcasting Ability:</strong> Wisdom</p>
-            <p><strong>Spell Save DC:</strong> <span id="spell-save-dc">---</span></p>
-            <p><strong>Spell Attack Bonus:</strong> <span id="spell-attack-bonus">---</span></p>
-            <p><strong>Prepared Spells:</strong> <span id="prepared-spells">---</span></p>
-            <p><strong>Mana:</strong> <span id="current-mana">---</span> / <span id="max-mana">---</span></p>
-            <div id="mana-buttons">
-                <button onclick="useMana(100)">Level 1 {100}<span id="level-1-casts" class="mana-count"></span></button>
-                <span id="level-1-casts"></span>
-                <button onclick="useMana(200)">Level 2 {200}<span id="level-2-casts" class="mana-count"></span></button>
-                <span id="level-2-casts"></span>
-                <button onclick="useMana(300)">Level 3 {300}<span id="level-3-casts" class="mana-count"></span></button>
-                <span id="level-3-casts"></span>
-                <button onclick="useMana(400)">Level 4 {400}<span id="level-4-casts" class="mana-count"></span></button>
-                <span id="level-4-casts"></span>
-                <button onclick="useMana(500)">Level 5 {500}<span id="level-5-casts" class="mana-count"></span></button>
-                <span id="level-5-casts"></span>
-                <button onclick="useMana(600)">Level 6 {600}<span id="level-6-casts" class="mana-count"></span></button>
-                <span id="level-6-casts"></span>
-                <button onclick="useMana(700)">Level 7 {700}<span id="level-7-casts" class="mana-count"></span></button>
-                <span id="level-7-casts"></span>
-                <button onclick="useMana(800)">Level 8 {800}<span id="level-8-casts" class="mana-count"></span></button>
-                <span id="level-8-casts"></span>
-                <button onclick="useMana(900)">Level 9 {900}<span id="level-9-casts" class="mana-count"></span></button>
-                <span id="level-9-casts"></span>
-            </div>
-            <button onclick="resetMana()">Reset Mana</button>
-            <div id="spellsTab">
-                <h2>Spells</h2>
-                <div class="spell-container">
-                    <div class="spell-book">
-                        <h3>Spell Book</h3>
-                        <ul id="spellBook"></ul>
+        <!-- Player Tab -->
+        <section id="player" class="tab-content active-tab">
+            <div class="character-sheet">
+                <!-- Left Section -->
+                <div class="section">
+                    <h2>Character Details</h2>
+                    <div class="form-group">
+                        <label for="inspiration">Inspiration:</label>
+                        <input type="checkbox" id="inspiration">
                     </div>
-                    <div class="spell-list">
-                        <h3>Available Spells</h3>
-                        <button onclick="addSpell()">Add Spell</button>
-                        <ul id="spellList"></ul>
+
+                    <div class="form-group">
+                        <label for="prof-bonus">Proficiency Bonus:</label>
+                        <input type="number" id="prof-bonus" value="2" oninput="updateModifiers()">
+                    </div>
+
+                    <h3>Saving Throws</h3>
+                    <div id="saving-throws" role="group" aria-label="Saving Throws"></div>
+
+                    <h3>Skills</h3>
+                    <div id="skills" role="group" aria-label="Skills"></div>
+
+                    <h3>Other Stats</h3>
+                    <p>Passive Perception: <span class="mod" id="passive-perception">10</span></p>
+                    <p>Initiative: <span class="mod" id="initiative">+0</span></p>
+                </div>
+
+                <!-- Middle Section -->
+                <div class="section">
+                    <h2>Abilities</h2>
+                    <div class="form-group">
+                        <label for="level">Level:</label>
+                        <input type="number" id="level" value="1" min="1" max="20" oninput="updateModifiers()">
+                    </div>
+
+                    <div id="abilities" role="group" aria-label="Ability Scores"></div>
+                </div>
+
+                <!-- Right Section -->
+                <div class="section">
+                    <!-- Health Section -->
+                    <section class="health-section" aria-labelledby="health-heading">
+                        <h2 id="health-heading">Health</h2>
+                        <div class="form-group">
+                            <label for="max-hp">Max HP:</label>
+                            <input type="number" id="max-hp" value="100" min="1" oninput="validateHP()">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="current-hp">Current HP:</label>
+                            <input type="number" id="current-hp" value="100" min="0" oninput="validateHP()">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="temp-hp">Temporary HP:</label>
+                            <input type="number" id="temp-hp" value="0" min="0" oninput="validateHP()">
+                        </div>
+
+                        <div class="health-controls">
+                            <button onclick="resetHealth()">Reset Health</button>
+                            <button onclick="takeDamage()">Take Damage</button>
+                            <input type="number" id="damage-input" value="0" min="0" aria-label="Damage Amount">
+                        </div>
+
+                        <h3>Hit Dice</h3>
+                        <p>Hit Dice: <span id="hit-dice">1d8</span></p>
+                        <p>Available Hit Dice: <input type="number" id="available-hit-dice"></p>
+                        <div class="hit-dice-controls">
+                            <button onclick="useHitDie()">Use Hit Die</button>
+                            <button onclick="resetHitDice()">Reset Hit Dice</button>
+                        </div>
+
+                        <h3>Death Saves</h3>
+                        <div class="death-saves">
+                            <div class="save-group">
+                                <label>Successes:</label>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="death-save-success-1" aria-label="Death Save Success 1">
+                                    <input type="checkbox" id="death-save-success-2" aria-label="Death Save Success 2">
+                                    <input type="checkbox" id="death-save-success-3" aria-label="Death Save Success 3">
+                                </div>
+                            </div>
+                            <div class="save-group">
+                                <label>Failures:</label>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="death-save-fail-1" aria-label="Death Save Failure 1">
+                                    <input type="checkbox" id="death-save-fail-2" aria-label="Death Save Failure 2">
+                                    <input type="checkbox" id="death-save-fail-3" aria-label="Death Save Failure 3">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Currency Section -->
+                    <section class="currency-section" aria-labelledby="currency-heading">
+                        <h2 id="currency-heading">Currency</h2>
+                        <div class="currency-display">
+                            <p>CP: <span id="cp-display">0</span></p>
+                            <p>SP: <span id="sp-display">0</span></p>
+                            <p>EP: <span id="ep-display">0</span></p>
+                            <p>GP: <span id="gp-display">0</span></p>
+                        </div>
+
+                        <div class="currency-controls">
+                            <label for="currency-type">Modify Currency:</label>
+                            <select id="currency-type">
+                                <option value="cp">Copper (CP)</option>
+                                <option value="sp">Silver (SP)</option>
+                                <option value="ep">Electrum (EP)</option>
+                                <option value="gp">Gold (GP)</option>
+                            </select>
+
+                            <select id="add-subtract">
+                                <option value="add">Add</option>
+                                <option value="subtract">Subtract</option>
+                            </select>
+
+                            <input type="number" id="currency-amount" value="1" min="1">
+                            <button onclick="modifyCurrency()">Apply</button>
+                            <button onclick="convertCurrency()">Convert Currency</button>
+                        </div>
+
+                        <p>Total GP Value: <span id="total-gp">0</span></p>
+
+                        <div class="exchange-rates">
+                            <h4>Exchange Rates</h4>
+                            <ul>
+                                <li>100 CP = 1 GP</li>
+                                <li>10 SP = 1 GP</li>
+                                <li>2 EP = 1 GP</li>
+                                <li>10 GP = 1 PP</li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spells Tab -->
+        <section id="spells" class="tab-content">
+            <div class="spell-info">
+                <div class="spellcasting-details">
+                    <p><strong>Spellcasting Class:</strong> Druid</p>
+                    <p><strong>Spellcasting Ability:</strong> Wisdom</p>
+                    <p><strong>Spell Save DC:</strong> <span id="spell-save-dc">---</span></p>
+                    <p><strong>Spell Attack Bonus:</strong> <span id="spell-attack-bonus">---</span></p>
+                    <p><strong>Prepared Spells:</strong> <span id="prepared-spells">---</span></p>
+                    <p><strong>Mana:</strong> <span id="current-mana">---</span> / <span id="max-mana">---</span></p>
+                </div>
+
+                <div id="mana-buttons" class="spell-levels">
+                    <div class="spell-level-buttons">
+                        <button onclick="useMana(100)" class="spell-button">
+                            Level 1 {100}<span id="level-1-casts" class="mana-count"></span>
+                        </button>
+                        <button onclick="useMana(200)" class="spell-button">
+                            Level 2 {200}<span id="level-2-casts" class="mana-count"></span>
+                        </button>
+                        <button onclick="useMana(300)" class="spell-button">
+                            Level 3 {300}<span id="level-3-casts" class="mana-count"></span>
+                        </button>
+                        <button onclick="useMana(400)" class="spell-button">
+                            Level 4 {400}<span id="level-4-casts" class="mana-count"></span>
+                        </button>
+                        <button onclick="useMana(500)" class="spell-button">
+                            Level 5 {500}<span id="level-5-casts" class="mana-count"></span>
+                        </button>
+                        <button onclick="useMana(600)" class="spell-button">
+                            Level 6 {600}<span id="level-6-casts" class="mana-count"></span>
+                        </button>
+                        <button onclick="useMana(700)" class="spell-button">
+                            Level 7 {700}<span id="level-7-casts" class="mana-count"></span>
+                        </button>
+                        <button onclick="useMana(800)" class="spell-button">
+                            Level 8 {800}<span id="level-8-casts" class="mana-count"></span>
+                        </button>
+                        <button onclick="useMana(900)" class="spell-button">
+                            Level 9 {900}<span id="level-9-casts" class="mana-count"></span>
+                        </button>
+                    </div>
+                    <button onclick="resetMana()" class="reset-mana">Reset Mana</button>
+                </div>
+
+                <div id="spellsTab" class="spells-management">
+                    <h2>Spells Management</h2>
+                    <div class="spell-container">
+                        <div class="spell-book">
+                            <h3>Spell Book</h3>
+                            <ul id="spellBook" role="list"></ul>
+                        </div>
+                        <div class="spell-list">
+                            <h3>Available Spells</h3>
+                            <button onclick="addSpell()">Add Spell</button>
+                            <ul id="spellList" role="list"></ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <script>
-        const abilities = ["Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma"];
-        const skills = {
-            "Perception": "Wisdom",
-            "Acrobatics": "Dexterity",
-            "Athletics": "Strength",
-            "Deception": "Charisma",
-            "Insight": "Wisdom",
-            "Investigation": "Intelligence",
-            "Persuasion": "Charisma",
-            "Stealth": "Dexterity",
-            "Survival": "Wisdom"
-        };
-
-        function openTab(tabName) {
-            document.querySelectorAll(".tab-content").forEach(tab => tab.style.display = "none");
-            document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
-
-            document.getElementById(tabName).style.display = "block";
-
-            let clickedTab = document.querySelector(`.tab[data-target="${tabName}"]`);
-            if (clickedTab) {
-                clickedTab.classList.add("active");
-            }
-        }
-
-
-        function calculateModifier(score) {
-            return Math.floor(score / 2) - 5;
-        }
-
-        function updateModifiers() {
-            let level = parseInt(document.getElementById("level").value) || 1;
-            document.getElementById("hit-dice").innerText = `${level}d8`;
-            document.getElementById("available-hit-dice").innerText = level;
-
-            let profBonus = parseInt(document.getElementById("prof-bonus").value) || 0;
-
-            abilities.forEach(ability => {
-                let id = ability.toLowerCase().substring(0, 3);
-                let score = parseInt(document.getElementById(id).value) || 1;
-                let modifier = calculateModifier(score);
-                document.getElementById(id + "-mod").innerText = modifier >= 0 ? `+${modifier}` : modifier;
-            });
-
-            document.querySelectorAll(".saving-throw, .skill").forEach(element => {
-                let ability = element.dataset.ability;
-                let id = ability.toLowerCase().substring(0, 3);
-                let baseMod = calculateModifier(parseInt(document.getElementById(id).value) || 1);
-                let isChecked = document.getElementById(element.id + "-chk").checked;
-                element.innerText = isChecked ? (baseMod + profBonus >= 0 ? `+${baseMod + profBonus}` : baseMod + profBonus) : (baseMod >= 0 ? `+${baseMod}` : baseMod);
-            });
-
-            // 🎯 Spellcasting Calculations
-            let wisdomMod = calculateModifier(parseInt(document.getElementById("wis").value) || 1);
-            let spellSaveDC = 8 + profBonus + wisdomMod;
-            let spellAttackBonus = wisdomMod + profBonus;
-
-            document.getElementById("spell-save-dc").innerText = spellSaveDC;
-            document.getElementById("spell-attack-bonus").innerText = `+${spellAttackBonus}`;
-
-            // 🎯 Prepared Spells & Mana System
-            let preparedSpellsList = [4, 5, 6, 7, 9, 10, 11, 12, 14, 15, 16, 16, 17, 17, 18, 18, 19, 20, 21, 22];
-            let maxManaList = [200, 300, 1200, 1400, 2000, 2300, 2700, 3100, 4000, 4500, 5100, 5100, 5800, 5800, 6600, 6600, 7500, 7500, 7500, 7500];
-
-            let preparedSpells = preparedSpellsList[level - 1] || 4;
-            let maxMana = maxManaList[level - 1] || 200;
-
-            document.getElementById("prepared-spells").innerText = preparedSpells;
-            document.getElementById("max-mana").innerText = maxMana;
-
-            // 🎯 Auto-set Current Mana to Max Mana on Level Change
-            document.getElementById("current-mana").innerText = maxMana;
-
-            document.getElementById("initiative").innerText = document.getElementById("dex-mod").innerText;
-            let perceptionMod = parseInt(document.getElementById("perception").innerText) || 0;
-            document.getElementById("passive-perception").innerText = 10 + perceptionMod;
-        }
-
-        function validateHP() {
-            let maxHP = parseInt(document.getElementById("max-hp").value);
-            let tempHP = parseInt(document.getElementById("temp-hp").value);
-            let currentHP = parseInt(document.getElementById("current-hp").value);
-
-            if (currentHP > maxHP + tempHP) {
-                document.getElementById("current-hp").value = maxHP + tempHP;
-            }
-        }
-
-        function resetHealth() {
-            let maxHP = parseInt(document.getElementById("max-hp").value);
-            document.getElementById("current-hp").value = maxHP;
-            document.getElementById("temp-hp").value = 0;
-        }
-
-        function takeDamage() {
-            let damage = parseInt(document.getElementById("damage-input").value) || 0;
-            let tempHP = parseInt(document.getElementById("temp-hp").value);
-            let currentHP = parseInt(document.getElementById("current-hp").value);
-
-            if (tempHP >= damage) {
-                document.getElementById("temp-hp").value = tempHP - damage;
-            } else {
-                let leftoverDamage = damage - tempHP;
-                document.getElementById("temp-hp").value = 0;
-                document.getElementById("current-hp").value = Math.max(0, currentHP - leftoverDamage);
-            }
-        }
-
-        // Generate Ability Score Section
-        document.getElementById("abilities").innerHTML = abilities.map(ability => {
-            let id = ability.toLowerCase().substring(0, 3);
-            return `<div class="stat-block">${ability}<br>
-        <input type="number" id="${id}" value="10" min="1" oninput="updateModifiers()">  
-        <br>Mod: <span class="mod" id="${id}-mod">+0</span></div>`;
-        }).join("");
-
-        // Generate Saving Throws & Skills
-        document.getElementById("saving-throws").innerHTML = abilities.map(ability => {
-            let id = ability.toLowerCase().substring(0, 3);
-            return `<div class="checkbox-label"><input type="checkbox" id="${id}-save-chk" onchange="updateModifiers()">${ability} <span class="mod saving-throw" id="${id}-save" data-ability="${ability}">+0</span></div>`;
-        }).join("");
-
-        document.getElementById("skills").innerHTML = Object.entries(skills).map(([skill, ability]) => {
-            let id = skill.replace(" ", "-").toLowerCase();
-            return `<div class="checkbox-label"><input type="checkbox" id="${id}-chk" onchange="updateModifiers()">${skill} <span class="mod skill" id="${id}" data-ability="${ability}">+0</span></div>`;
-        }).join("");
-
-        updateModifiers();
-
-        // Currency Storage
-        let currency = { cp: 0, sp: 0, ep: 0, gp: 0 };
-
-        function modifyCurrency() {
-            let type = document.getElementById("currency-type").value;
-            let action = document.getElementById("add-subtract").value;
-            let amount = parseInt(document.getElementById("currency-amount").value) || 0;
-
-            if (amount <= 0) {
-                return;
-            }
-
-            // Convert everything to copper for easy calculation
-            let totalCP = convertToCP();
-
-            // Convert the amount to copper based on the selected type
-            let amountCP = convertTypeToCP(type, amount);
-
-            // Apply addition or subtraction
-            if (action === "add") {
-                totalCP += amountCP;
-            } else if (action === "subtract") {
-                if (totalCP >= amountCP) {
-                    totalCP -= amountCP;
-                } else {
-                    return;
-                }
-            }
-
-            // Convert back to standard denominations
-            convertFromCP(totalCP);
-            updateDisplay();
-        }
-
-        // Convert all currency to total copper (CP)
-        function convertToCP() {
-            return currency.cp +
-                currency.sp * 10 +
-                currency.ep * 50 +
-                currency.gp * 100;
-        }
-
-        // Convert an amount of a selected type to copper (CP)
-        function convertTypeToCP(type, amount) {
-            switch (type) {
-                case "cp": return amount;
-                case "sp": return amount * 10;
-                case "ep": return amount * 50;
-                case "gp": return amount * 100;
-                default: return 0;
-            }
-        }
-
-        // Convert total copper (CP) back into standard denominations
-        function convertFromCP(totalCP) {
-            currency.gp = Math.floor(totalCP / 100);
-            totalCP %= 100;
-
-            currency.ep = Math.floor(totalCP / 50);
-            totalCP %= 50;
-
-            currency.sp = Math.floor(totalCP / 10);
-            totalCP %= 10;
-
-            currency.cp = totalCP;
-        }
-
-        // Update the UI
-        function updateDisplay() {
-            document.getElementById("cp-display").innerText = currency.cp;
-            document.getElementById("sp-display").innerText = currency.sp;
-            document.getElementById("ep-display").innerText = currency.ep;
-            document.getElementById("gp-display").innerText = currency.gp;
-
-            let totalGP = (currency.cp / 100) + (currency.sp / 10) + (currency.ep / 5) + currency.gp;
-            document.getElementById("total-gp").innerText = totalGP.toFixed(2);
-        }
-
-        // Initialize Display
-        updateDisplay();
-
-        function updateSpellStats() {
-            // Get values from the Player Tab
-            let wisdomMod = parseInt(document.getElementById("wis-mod").textContent) || 0;
-            let proficiencyBonus = parseInt(document.getElementById("prof-bonus").value) || 0;
-
-            // Calculate Spell Save DC and Spell Attack Bonus
-            let spellSaveDC = 8 + proficiencyBonus + wisdomMod;
-            let spellAttackBonus = wisdomMod + proficiencyBonus;
-
-            // Update the Spells Tab
-            document.getElementById("spell-save-dc").textContent = spellSaveDC;
-            document.getElementById("spell-attack-bonus").textContent = `+${spellAttackBonus}`;
-        }
-
-        // Call function on page load
-        document.addEventListener("DOMContentLoaded", updateSpellStats);
-
-        function useMana(cost) {
-            let currentMana = parseInt(document.getElementById("current-mana").innerText) || 0;
-
-            if (currentMana >= cost) {
-                currentMana -= cost;
-                document.getElementById("current-mana").innerText = currentMana;
-                updateManaButtons(currentMana);
-            } else {
-            }
-        }
-
-        function resetMana() {
-            let maxMana = parseInt(document.getElementById("max-mana").innerText) || 0;
-            document.getElementById("current-mana").innerText = maxMana;
-            updateManaButtons(maxMana);
-        }
-
-        function updateManaButtons(currentMana) {
-            let spellLevels = [100, 200, 300, 400, 500, 600, 700, 800, 900]; // Mana costs per level
-
-            spellLevels.forEach((cost, index) => {
-                let maxCasts = Math.floor(currentMana / cost);
-                document.getElementById(`level-${index + 1}-casts`).innerText = `(${maxCasts} uses left)`;
-            });
-        }
-
-        // Ensure game loads correctly on page load
-        window.onload = function () {
-            loadGame();
-            updateUI();
-        };
-
-        let player = {
-            level: 1,
-            inventory: [],
-            spells: [],
-            spellBook: []
-        };
-
-        // ✅ Load game from localStorage
-        function loadGame() {
-            let savedData = localStorage.getItem("playerData");
-
-            if (savedData) {
-                let gameData = JSON.parse(savedData);
-
-                document.getElementById("level").value = gameData.level;
-
-                player.inventory = Array.isArray(gameData.inventory)
-                    ? gameData.inventory.map(item => ({
-                        name: item.name || "Unknown",
-                        quantity: item.quantity || 1,
-                        description: item.description || ""
-                    }))
-                    : [];
-
-                player.spells = Array.isArray(gameData.spells) ? gameData.spells : [];
-                player.spellBook = Array.isArray(gameData.spellBook) ? gameData.spellBook : [];
-
-                // Load ability scores
-                abilities.forEach(ability => {
-                    let id = ability.toLowerCase().substring(0, 3);
-                    document.getElementById(id).value = gameData.abilities[id] || 10;
-                });
-
-                // Load checkboxes
-                document.querySelectorAll("input[type=checkbox]").forEach(checkbox => {
-                    checkbox.checked = gameData.checkboxes[checkbox.id] || false;
-                });
-
-                // Load proficiency bonus
-                document.getElementById("prof-bonus").value = gameData.profBonus || 2;
-
-                // Load currency
-                currency.cp = gameData.currency.cp || 0;
-                currency.sp = gameData.currency.sp || 0;
-                currency.ep = gameData.currency.ep || 0;
-                currency.gp = gameData.currency.gp || 0;
-                updateDisplay();
-
-                // Load health
-                document.getElementById("max-hp").value = gameData.health.maxHP || 100;
-                document.getElementById("current-hp").value = gameData.health.currentHP || 100;
-                document.getElementById("temp-hp").value = gameData.health.tempHP || 0;
-
-                // Load hit dice
-                let hitDiceElement = document.getElementById("available-hit-dice");
-                if (hitDiceElement) {
-                    let hitDiceValue = gameData.availableHitDice ?? gameData.level; // Use nullish coalescing instead of `||`
-                    hitDiceElement.value = hitDiceValue;
-                } else {
-                    console.error("Error: Element #available-hit-dice not found!");
-                }
-
-                // Load mana
-                let currentMana = gameData.currentMana || 0;
-
-                document.getElementById("current-mana").textContent = currentMana || 0;
-                updateManaButtons(currentMana);
-
-                // Call these functions to update UI after loading
-                updateInventoryUI();
-                updateSpellsUI();
-                updateModifiers();
-            }
-        }
-
-        function saveGame() {
-            let hitDiceValue = document.getElementById("available-hit-dice")?.value;
-
-            let gameData = {
-                level: document.getElementById("level").value,
-                inventory: player.inventory,
-                spells: player.spells,
-                spellBook: player.spellBook,
-                availableHitDice: hitDiceValue ? Number(hitDiceValue) : 0,  // Ensure it's saved as a number
-                abilities: {},
-                checkboxes: {},
-                profBonus: document.getElementById("prof-bonus").value,
-                currency: {
-                    cp: currency.cp,
-                    sp: currency.sp,
-                    ep: currency.ep,
-                    gp: currency.gp
-                },
-                health: {
-                    maxHP: document.getElementById("max-hp").value,
-                    currentHP: document.getElementById("current-hp").value,
-                    tempHP: document.getElementById("temp-hp").value
-                },
-                currentMana: document.getElementById("current-mana").innerText
-            };
-
-            // Save ability scores
-            abilities.forEach(ability => {
-                let id = ability.toLowerCase().substring(0, 3);
-                gameData.abilities[id] = document.getElementById(id).value;
-            });
-
-            // Save checkboxes
-            document.querySelectorAll("input[type=checkbox]").forEach(checkbox => {
-                gameData.checkboxes[checkbox.id] = checkbox.checked;
-            });
-
-            localStorage.setItem("playerData", JSON.stringify(gameData));
-        }
-
-        // ✅ Add an item to inventory
-        function addItem() {
-            let name = document.getElementById("item-name").value.trim();
-            let quantity = parseInt(document.getElementById("item-quantity").value);
-            let description = document.getElementById("item-description").value.trim();
-
-            if (!name || isNaN(quantity) || quantity <= 0) {
-                return;
-            }
-
-            let existingItem = player.inventory.find(item => item.name === name);
-            if (existingItem) {
-                existingItem.quantity += quantity;
-            } else {
-                player.inventory.push({ name, quantity, description });
-            }
-
-            saveGame();
-            updateInventoryUI();
-
-            // Clear input fields
-            document.getElementById("item-name").value = "";
-            document.getElementById("item-quantity").value = "1";
-            document.getElementById("item-description").value = "";
-        }
-
-        // ✅ Add 1 to an item in inventory
-        function addItemQuantity(name) {
-            let existingItem = player.inventory.find(item => item.name === name);
-            if (existingItem) {
-                existingItem.quantity += 1;
-                saveGame();
-                updateInventoryUI();
-            }
-        }
-
-        // ✅ Remove an item from inventory
-        function removeItem(name) {
-            let itemIndex = player.inventory.findIndex(item => item.name === name);
-            if (itemIndex !== -1) {
-                if (player.inventory[itemIndex].quantity > 1) {
-                    player.inventory[itemIndex].quantity -= 1;
-                } else {
-                    player.inventory.splice(itemIndex, 1);
-                }
-                saveGame();
-                updateInventoryUI();
-            }
-        }
-
-        // ✅ Update inventory UI
-        function updateInventoryUI() {
-            let inventoryList = document.getElementById("inventory-list");
-            inventoryList.innerHTML = "";
-
-            player.inventory.forEach(item => {
-                let listItem = document.createElement("li");
-                listItem.innerHTML = `<b>${item.quantity}x</b> ${item.name} - ${item.description}`;
-
-                let addBtn = document.createElement("button");
-                addBtn.textContent = "Add 1";
-                addBtn.style.marginLeft = "10px";
-                addBtn.onclick = () => addItemQuantity(item.name);
-
-                let removeBtn = document.createElement("button");
-                removeBtn.textContent = "Remove 1";
-                removeBtn.style.marginLeft = "10px";
-                removeBtn.onclick = () => removeItem(item.name);
-
-                listItem.appendChild(addBtn);
-                listItem.appendChild(removeBtn);
-                inventoryList.appendChild(listItem);
-            });
-        }
-
-
-        function addSpell() {
-            let spellName = prompt("Enter spell name:");
-            let spellDescription = prompt("Enter spell description:");
-            let spellLevel = prompt("Enter spell level:");
-            if (spellName && spellDescription && spellLevel) {
-                player.spells.push({ name: spellName, description: spellDescription, level: spellLevel });
-                updateSpellsUI();
-                saveGame(); // Save after adding a spell
-            }
-        }
-
-        function addToSpellBook(index) {
-            let spell = player.spells.splice(index, 1)[0];
-            player.spellBook.push(spell);
-            updateSpellsUI();
-            saveGame();
-        }
-
-        function removeFromSpellBook(index) {
-            let spell = player.spellBook.splice(index, 1)[0];
-            player.spells.push(spell);
-            updateSpellsUI();
-            saveGame();
-        }
-
-        function removeSpell(index) {
-            player.spells.splice(index, 1);
-            updateSpellsUI();
-            saveGame();
-        }
-
-        // ✅ Update spells UI
-        function updateSpellsUI() {
-            let spellList = document.getElementById("spellList");
-            spellList.innerHTML = "";
-
-            player.spells.forEach((spell, index) => {
-                let spellItem = document.createElement("li");
-                spellItem.innerHTML = `<b>${spell.name}</b> (Level ${spell.level}) - ${spell.description} `;
-
-                let addButton = document.createElement("button");
-                addButton.innerText = "Add to Spell Book";
-                addButton.onclick = () => addToSpellBook(index);
-
-                let removeButton = document.createElement("button");
-                removeButton.innerText = "Remove";
-                removeButton.onclick = () => removeSpell(index);
-
-                spellItem.appendChild(addButton);
-                spellItem.appendChild(removeButton);
-                spellList.appendChild(spellItem);
-            });
-
-            let spellBook = document.getElementById("spellBook");
-            spellBook.innerHTML = "";
-
-            player.spellBook.forEach((spell, index) => {
-                let spellItem = document.createElement("li");
-                spellItem.innerHTML = `<b>${spell.name}</b> (Level ${spell.level}) - ${spell.description} `;
-
-                let removeButton = document.createElement("button");
-                removeButton.innerText = "Remove";
-                removeButton.onclick = () => removeFromSpellBook(index);
-
-                spellItem.appendChild(removeButton);
-                spellBook.appendChild(spellItem);
-            });
-        }
-
-
-        // ✅ Update full UI
-        function updateUI() {
-
-            let levelElement = document.getElementById("level");
-            if (levelElement) {
-                levelElement.innerText = player.level;
-            } else {
-                console.error("❌ ERROR: #level element not found!");
-            }
-
-            updateInventoryUI();
-            updateSpellsUI();
-        }
-
-        // ✅ Auto-save every 5 minutes
-        setInterval(() => {
-            let Time_now = new Date();
-            let timeString = Time_now.toLocaleTimeString(); // Formats time as HH:MM:SS AM/PM
-            console.log(`The game was last saved at ${timeString}.`);
-        }, 300000);
-
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-        }
-
-        // Load dark mode preference on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('darkMode') === 'true') {
-                document.body.classList.add('dark-mode');
-            }
-        });
-
-        function convertCurrency() {
-            let totalCP = convertToCP();
-
-            // Convert total copper (CP) back into standard denominations
-            convertFromCP(totalCP);
-            updateDisplay();
-        }
-
-        function useHitDie() {
-            let availableHitDice = parseInt(document.getElementById("available-hit-dice").innerText);
-            if (availableHitDice > 0) {
-                availableHitDice -= 1;
-                document.getElementById("available-hit-dice").innerText = availableHitDice;
-                saveGame();
-            }
-        }
-
-        function resetHitDice() {
-            let level = parseInt(document.getElementById("level").value) || 1;
-            document.getElementById("available-hit-dice").innerText = level;
-            saveGame();
-        }
-
-    </script>
-
+        </section>
+    </main>
 </body>
-
 </html>
