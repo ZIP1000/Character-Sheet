@@ -11,15 +11,18 @@
 body {
     font-family: 'Georgia', serif;
     background-color: var(--primary-bg);
-    padding: 20px;
+    padding: 2%;
     color: var(--primary-text);
+    width: 96%; /* Account for padding */
+    margin: 0 auto;
 }
 
 /* Navigation and Tabs */
 .tab-container {
     display: flex;
-    gap: 5px;
+    gap: 1%;
     margin-bottom: 20px;
+    width: 100%;
 }
 
 .tab {
@@ -29,55 +32,46 @@ body {
     border-radius: 5px 5px 0 0;
     cursor: pointer;
     border: none;
-}
-
-.tab:hover,
-.tab.active {
-    background: var(--hover-color);
+    flex: 1;
 }
 
 /* Tab Content */
 .tab-content {
-    display: none;  /* Hidden by default */
-    padding: 20px;
+    display: none;
+    padding: 2%;
     background: var(--secondary-bg);
     border: 2px solid var(--border-color);
     border-radius: 0 0 10px 10px;
-}
-
-.tab-content.active-tab {
-    display: block;  /* Shown when active */
+    width: 96%; /* Account for padding */
 }
 
 /* Character Sheet Layout */
 .character-sheet {
     display: flex;
-    gap: 20px;
+    gap: 2%;
     flex-wrap: wrap;
+    width: 100%;
 }
 
 .section {
     background: var(--secondary-bg);
-    padding: 15px;
+    padding: 2%;
     border: 2px solid var(--border-color);
     border-radius: 10px;
-    width: 250px;
     flex: 1;
+    min-width: 300px; /* Minimum width before wrapping */
+    margin-bottom: 20px;
 }
 
 /* Form Elements */
 .stat-block input,
 .skill-block input {
-    width: 50px;
+    width: 80%;
+    max-width: 100px;
     text-align: center;
     font-size: 16px;
     font-weight: bold;
     padding: 5px;
-}
-
-.mod {
-    font-size: 18px;
-    font-weight: bold;
 }
 
 .char-info input {
@@ -88,26 +82,93 @@ body {
     padding: 5px;
 }
 
-/* Headers */
-h1, h2, h3 {
-    text-align: center;
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 5px;
-    margin-top: 0;
-}
-
 /* Spell System */
 .spell-info {
     background-color: #f4f4f4;
-    padding: 20px;
+    padding: 2%;
     border-radius: 8px;
     margin-bottom: 20px;
+    width: 96%;
 }
 
 .spell-container {
     display: flex;
-    gap: 20px;
+    gap: 2%;
     margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.spell-book,
+.spell-list {
+    flex: 1;
+    min-width: 300px;
+}
+
+/* Currency Section */
+.currency-section {
+    width: 100%;
+}
+
+.currency-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.currency-controls select,
+.currency-controls input {
+    flex: 1;
+    min-width: 120px;
+}
+
+/* Health Section */
+.health-section input {
+    width: 100%;
+    max-width: 200px;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .section {
+        flex: 0 1 48%; /* Two columns */
+    }
+}
+
+@media (max-width: 768px) {
+    .section {
+        flex: 0 1 100%; /* Single column */
+    }
+
+    .tab-container {
+        flex-wrap: wrap;
+    }
+
+    .tab {
+        flex: 1 1 auto;
+        min-width: 120px;
+    }
+
+    body {
+        padding: 10px;
+    }
+
+    .spell-book,
+    .spell-list {
+        flex: 0 1 100%;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
+
+:focus {
+    outline: 2px solid #4A90E2;
+    outline-offset: 2px;
 }
 
 /* Buttons */
