@@ -679,8 +679,8 @@
             }
         }
 
-        function saveGame() {
-            let hitDiceValue = document.getElementById("available-hit-dice")?.value;
+                function saveGame() {
+            let hitDiceValue = document.getElementById("available-hit-dice")?.innerText; // Use innerText instead of value
 
             let gameData = {
                 level: document.getElementById("level").value,
@@ -702,7 +702,7 @@
                     currentHP: document.getElementById("current-hp").value,
                     tempHP: document.getElementById("temp-hp").value
                 },
-                currentMana: document.getElementById("current-mana").innerText
+                currentMana: document.getElementById("current-mana").innerText // Use innerText instead of value
             };
 
             // Save ability scores
