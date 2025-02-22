@@ -378,7 +378,11 @@
         function updateModifiers() {
             let level = parseInt(document.getElementById("level").value) || 1;
             document.getElementById("hit-dice").innerText = `${level}d8`;
-            document.getElementById("available-hit-dice").innerText = level;
+
+            let availableHitDiceElement = document.getElementById("available-hit-dice");
+            if (!availableHitDiceElement.innerText) {
+                availableHitDiceElement.innerText = level;
+            }
 
             let profBonus = parseInt(document.getElementById("prof-bonus").value) || 0;
 
@@ -415,8 +419,10 @@
             document.getElementById("prepared-spells").innerText = preparedSpells;
             document.getElementById("max-mana").innerText = maxMana;
 
-            // 🎯 Auto-set Current Mana to Max Mana on Level Change
-            document.getElementById("current-mana").innerText = maxMana;
+            let currentManaElement = document.getElementById("current-mana");
+            if (!currentManaElement.innerText) {
+                currentManaElement.innerText = maxMana;
+            }
 
             document.getElementById("initiative").innerText = document.getElementById("dex-mod").innerText;
             let perceptionMod = parseInt(document.getElementById("perception").innerText) || 0;
